@@ -29,6 +29,7 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    std::array<uint16_t, 2008> vdfSolution; // 4016bytes + previous 80 bytes = 4096 byte block headers.
 
     CBlockHeader() { SetNull(); }
 
@@ -39,6 +40,7 @@ public:
         READWRITE(obj.nTime);
         READWRITE(obj.nBits);
         READWRITE(obj.nNonce);
+        READWRITE(obj.vdfSolution);
     }
 
     void SetNull() {
@@ -48,6 +50,7 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        vdfSolution.fill(USHRT_MAX);
     }
 
     bool IsNull() const { return (nBits == 0); }
@@ -67,6 +70,10 @@ public:
 
     // memory only
     mutable bool fChecked;
+
+    // Memory-only flags for caching expensive checks
+    mutable bool m_checked_witness_commitment{false}; // CheckWitnessCommitment()
+    mutable bool m_checked_merkle_root{false};        // CheckMerkleRoot()
 
     CBlock() { SetNull(); }
 
@@ -96,6 +103,8 @@ public:
         vtx.clear();
         mw_blob.reset();
         fChecked = false;
+        m_checked_witness_commitment = false;
+        m_checked_merkle_root = false;
     }
 
     CBlockHeader GetBlockHeader() const {
@@ -106,6 +115,7 @@ public:
         block.nTime = nTime;
         block.nBits = nBits;
         block.nNonce = nNonce;
+        block.vdfSolution = vdfSolution;
         return block;
     }
 

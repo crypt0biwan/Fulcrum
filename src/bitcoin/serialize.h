@@ -379,7 +379,24 @@ template <typename Stream>
 inline void Unserialize(Stream &s, Span<uint8_t> &span) {
     s.read(CharCast(span.data()), span.size());
 }
+/**
+ * 
+ * Added for block header VDF solution 
+ * 
+ **/
+template<typename Stream, size_t N>
+void Serialize(Stream& s, const std::array<uint16_t, N>& arr) {
+    for (size_t i = 0; i < N; ++i) {
+        Serialize(s, arr[i]);
+    }
+}
 
+template<typename Stream, size_t N>
+void Unserialize(Stream& s, std::array<uint16_t, N>& arr) {
+    for (size_t i = 0; i < N; ++i) {
+        Unserialize(s, arr[i]);
+    }
+}
 /**
  * Compact Size
  * size <  253        -- 1 byte

@@ -13,7 +13,11 @@
 namespace bitcoin {
 
 uint256 CBlockHeader::GetHash() const {
-    return SerializeHash(*this);
+    if(nTime < 1723869065) {
+        return SerializeHash(vdfSolution);
+    } else {
+        return SerializeHash(*this);
+    }
 }
 
 std::string CBlock::ToString(bool fVerbose) const {

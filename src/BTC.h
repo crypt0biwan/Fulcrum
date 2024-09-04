@@ -150,7 +150,7 @@ namespace BTC
     void SerializeTokenDataWithPrefix(QByteArray &ba, const bitcoin::token::OutputData *ptokenData);
 
     /// Helper -- returns the size of a block header. Should always be 80. Update this if that changes.
-    constexpr int GetBlockHeaderSize() noexcept { return 80; }
+    constexpr int GetBlockHeaderSize() noexcept { return 4096; }
 
     /// Returns the sha256 double hash (not reveresed -- little endian) of the input QByteArray. The results are copied
     /// once from the hasher into the returned QByteArray.  This is faster than obtaining a uint256 from bitcoin::Hash
