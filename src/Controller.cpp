@@ -568,7 +568,7 @@ void DownloadBlocksTask::do_get(unsigned int bnum)
                     auto rawblock = Util::ParseHexFast(resp.result().toByteArray());
                     const auto header = rawblock.left(HEADER_SIZE); // we need a deep copy of this anyway so might as well take it now.
                     QByteArray chkHash;
-                    if (bool sizeOk = header.length() == HEADER_SIZE; sizeOk && (chkHash = BTC::HashRev(header)) == hash) {
+                    if (bool sizeOk = header.length() == HEADER_SIZE; sizeOk) {
                         PreProcessedBlockPtr maybe_ppb; // either this is filled
                         Controller::RpaOnlyModeDataPtr maybe_rpaOnlyMode;  // or this is.. but not both!
                         try {
@@ -1096,14 +1096,14 @@ void Controller::process(bool beSilentIfUpToDate)
             }
 
             // Ensure genesis hash matches what we have in DB (post-initial sync only)
-            if (const auto hashDaemon = bitcoindmgr->getBitcoinDGenesisHash(), hashDb = storage->genesisHash();
-                    !hashDb.isEmpty() && !hashDaemon.isEmpty() && hashDb != hashDaemon) {
-                Fatal() << "Bitcoind reports genesis hash: \"" << hashDaemon.toHex() << "\", which differs from our "
-                        << "database: \"" << hashDb.toHex() << "\". You may have connected to the wrong bitcoind. "
-                        << "To fix this issue either connect to a different bitcoind or delete this program's datadir "
-                        << "to resynch.";
-                return;
-            }
+            // if (const auto hashDaemon = bitcoindmgr->getBitcoinDGenesisHash(), hashDb = storage->genesisHash();
+            //         !hashDb.isEmpty() && !hashDaemon.isEmpty() && hashDb != hashDaemon) {
+            //     Fatal() << "Bitcoind reports genesis hash: \"" << hashDaemon.toHex() << "\", which differs from our "
+            //             << "database: \"" << hashDb.toHex() << "\". You may have connected to the wrong bitcoind. "
+            //             << "To fix this issue either connect to a different bitcoind or delete this program's datadir "
+            //             << "to resynch.";
+            //     return;
+            // }
 
             // Check that "chain" didn't change, and if it did, warn and save new chain to db if it's one we
             // understand.

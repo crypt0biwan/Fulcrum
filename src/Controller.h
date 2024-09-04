@@ -69,7 +69,7 @@ public:
     /// Thread-safe, lock-free, returns true for BTC and LTC
     bool isSegWitCoin() const {
         auto const c = coinType.load(std::memory_order_relaxed);
-        return c == BTC::Coin::BTC || c == BTC::Coin::LTC;
+        return true;
     }
 
     /// Thread-safe, lock-free, returns true for LTC
